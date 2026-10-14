@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Clocks Settings</title>
+  <style>
+    html, body { margin: 0; background: #2d2d2d; color: #d8d8d8; font: 13px/1.4 sans-serif; }
+    body { padding: 12px 16px 20px; }
+    h4 { margin: 14px 0 6px; font-size: 11px; letter-spacing: .08em; text-transform: uppercase; color: #8a8a8a; }
+    .row { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 5px 0; }
+    .row label { flex: 0 0 110px; }
+    .row .ctl { flex: 1; display: flex; align-items: center; gap: 8px; }
+    input[type=range] { flex: 1; }
+    input[type=color] { width: 44px; height: 24px; padding: 0; border: 1px solid #555; background: none; }
+    input[type=file] { flex: 1; color: #d8d8d8; font-size: 12px; min-width: 0; }
+    select, input[type=text] { flex: 1; min-width: 0; background: #f0f0f0; color: #1a1a1a; border: 1px solid #555; border-radius: 3px; padding: 4px 6px; font: inherit; }
+    select option { background: #ffffff; color: #1a1a1a; }
+    input[type=text]::placeholder { color: #777; }
+    .val { width: 32px; text-align: right; color: #aaa; }
+    button { background: #3d3d3d; color: #d8d8d8; border: 1px solid #555; padding: 5px 12px; cursor: pointer; }
+    button:hover { background: #4a4a4a; }
+    #reset { margin-top: 14px; }
+    #bgPreview { width: 48px; height: 48px; object-fit: cover; border: 1px solid #555; display: none; }
+  </style>
+</head>
+<body>
+  <h4>Background</h4>
+  <div class="row"><label for="bgColor">Color</label><div class="ctl"><input type="color" id="bgColor"></div></div>
+  <div class="row"><label for="bgFile">Image</label><div class="ctl">
+    <input type="file" id="bgFile" accept="image/*">
+  </div></div>
+  <div class="row"><label></label><div class="ctl">
+    <img id="bgPreview" alt="">
+    <button id="bgClear" type="button">Remove image</button>
+  </div></div>
+  <div class="row"><label for="bgOpacity">Image opacity</label><div class="ctl"><input type="range" id="bgOpacity" min="0" max="100" step="5"><span class="val" id="bgOpacity_v"></span></div></div>
+  <div class="row a"><label for="bgFaceOnly">Image in face only</label><div class="ctl"><input type="checkbox" id="bgFaceOnly"></div></div>
+
+  <!-- ===================== Digital only ===================== -->
+  <div class="d">
+    <h4>Time</h4>
+    <div class="row"><label for="showSeconds">Show seconds</label><div class="ctl"><input type="checkbox" id="showSeconds"></div></div>
+    <div class="row"><label for="hour12">12-hour clock</label><div class="ctl"><input type="checkbox" id="hour12"></div></div>
+    <div class="row"><label for="timeSize">Size</label><div class="ctl"><input type="range" id="timeSize" min="14" max="44" step="1"><span class="val" id="timeSize_v"></span></div></div>
+    <div class="row"><label for="timeColor">Color</label><div class="ctl"><input type="color" id="timeColor"></div></div>
+    <div class="row"><label for="secColor">Seconds color</label><div class="ctl"><input type="color" id="secColor"></div></div>
+    <div class="row"><label for="timeFont">Font</label><div class="ctl"><input type="text" id="timeFont" list="fontList" placeholder="e.g. DejaVu Sans Mono" spellcheck="false" autocomplete="off"></div></div>
+    <div class="row"><label for="timeBold">Bold text</label><div class="ctl"><input type="checkbox" id="timeBold"></div></div>
+    <div class="row"><label for="timeWrap">Wrap text</label><div class="ctl"><input type="checkbox" id="timeWrap"></div></div>
+  </div>
+
+  <!-- ===================== Analog only ===================== -->
+  <div class="a">
+    <h4>Face</h4>
+    <div class="row"><label for="clockSize">Clock size</label><div class="ctl"><input type="range" id="clockSize" min="60" max="100" step="1"><span class="val" id="clockSize_v"></span></div></div>
+    <div class="row"><label for="showFace">Face fill</label><div class="ctl"><input type="checkbox" id="showFace"><input type="color" id="faceColor"></div></div>
+    <div class="row"><label for="showRing">Outer ring</label><div class="ctl"><input type="checkbox" id="showRing"></div></div>
+    <div class="row"><label for="showHourTicks">Hour ticks</label><div class="ctl"><input type="checkbox" id="showHourTicks"></div></div>
+    <div class="row"><label for="showMinuteTicks">Minute ticks</label><div class="ctl"><input type="checkbox" id="showMinuteTicks"></div></div>
+    <div class="row"><label for="tickColor">Ring &amp; tick color</label><div class="ctl"><input type="color" id="tickColor"></div></div>
+
+    <h4>Numbers</h4>
+    <div class="row"><label for="numbers">Show</label><div class="ctl">
+      <select id="numbers">
+        <option value="none">None</option>
+        <option value="quarter">12 / 3 / 6 / 9</option>
+        <option value="all">All 12</option>
+      </select>
+    </div></div>
+    <div class="row"><label for="numberSize">Size</label><div class="ctl"><input type="range" id="numberSize" min="8" max="24" step="1"><span class="val" id="numberSize_v"></span></div></div>
+    <div class="row"><label for="numberColor">Color</label><div class="ctl"><input type="color" id="numberColor"></div></div>
+    <div class="row"><label for="numberFont">Font</label><div class="ctl"><input type="text" id="numberFont" list="fontList" placeholder="e.g. DejaVu Sans" spellcheck="false" autocomplete="off"></div></div>
+    <div class="row"><label for="numberBold">Bold text</label><div class="ctl"><input type="checkbox" id="numberBold"></div></div>
+
+    <h4>Hands</h4>
+    <div class="row"><label for="handWidth">Hand thickness</label><div class="ctl"><input type="range" id="handWidth" min="1" max="6" step="1"><span class="val" id="handWidth_v"></span></div></div>
+    <div class="row"><label for="hourHandColor">Hour hand</label><div class="ctl"><input type="color" id="hourHandColor"></div></div>
+    <div class="row"><label for="minuteHandColor">Minute hand</label><div class="ctl"><input type="color" id="minuteHandColor"></div></div>
+    <div class="row"><label for="showSecondHand">Second hand</label><div class="ctl"><input type="checkbox" id="showSecondHand"><input type="color" id="secondHandColor"></div></div>
+    <div class="row"><label for="smoothSecond">Smooth sweep</label><div class="ctl"><input type="checkbox" id="smoothSecond"></div></div>
+  </div>
+
+  <!-- ===================== Shared ===================== -->
+  <h4>Date</h4>
+  <div class="row"><label for="showDate">Show date</label><div class="ctl"><input type="checkbox" id="showDate"></div></div>
+  <div class="row"><label for="dateSize">Size</label><div class="ctl"><input type="range" id="dateSize" min="8" max="32" step="1"><span class="val" id="dateSize_v"></span></div></div>
+  <div class="row a"><label for="dateY">Vertical position</label><div class="ctl"><input type="range" id="dateY" min="0" max="100" step="1"><span class="val" id="dateY_v"></span></div></div>
+  <div class="row"><label for="dateFormat">Format</label><div class="ctl">
+    <select id="dateFormat"></select>
+  </div></div>
+  <div class="row"><label for="dateColor">Color</label><div class="ctl"><input type="color" id="dateColor"></div></div>
+  <div class="row"><label for="dateFont">Font</label><div class="ctl"><input type="text" id="dateFont" list="fontList" placeholder="e.g. Ubuntu" spellcheck="false" autocomplete="off"></div></div>
+  <div class="row"><label for="dateBold">Bold text</label><div class="ctl"><input type="checkbox" id="dateBold"></div></div>
+  <div class="row"><label for="dateWrap">Wrap text</label><div class="ctl"><input type="checkbox" id="dateWrap"></div></div>
+
+  <datalist id="fontList"></datalist>
+
+  <button id="reset" type="button">Reset to defaults</button>
+
+  <script src="js/fonts-list.js"></script>
+  <script>
+    const ACTION_ANALOG = "com.mrredstonia.clocks.analog";
+
+    const DEFAULTS_DIGITAL = {
+      bgColor: "#000000", bgImage: "", bgOpacity: 100,
+      timeColor: "#ffffff", secColor: "#4fc3f7", dateColor: "#ffffff",
+      timeSize: 27, dateSize: 20, timeBold: true, dateBold: true,
+      showSeconds: true, showDate: true, hour12: false, dateFormat: "wdDM",
+      timeFont: "monospace", dateFont: "monospace", timeWrap: true, dateWrap: true,
+    };
+    const DEFAULTS_ANALOG = {
+      bgColor: "#000000", bgImage: "", bgOpacity: 100,
+      showFace: true, faceColor: "#111111", showRing: true, tickColor: "#ffffff",
+      showHourTicks: true, showMinuteTicks: true,
+      numbers: "quarter", numberSize: 14, numberColor: "#ffffff",
+      hourHandColor: "#ffffff", minuteHandColor: "#ffffff", secondHandColor: "#4fc3f7",
+      showSecondHand: true, smoothSecond: false, clockSize: 100, handWidth: 3,
+      bgFaceOnly: false, dateY: 72,
+      showDate: true, dateColor: "#ffffff", dateSize: 14, dateFormat: "dM",
+      numberFont: "sans-serif", numberBold: true, dateFont: "monospace", dateBold: true, dateWrap: true,
+    };
+
+    let DEFAULTS = DEFAULTS_DIGITAL;
+    let ws = null;
+    let actionContext = null;
+    let settings = { ...DEFAULTS };
+
+    const $ = (id) => document.getElementById(id);
+
+    function applyKind(isAnalog) {
+      DEFAULTS = isAnalog ? DEFAULTS_ANALOG : DEFAULTS_DIGITAL;
+      for (const el of document.querySelectorAll(".d")) el.style.display = isAnalog ? "none" : "";
+      for (const el of document.querySelectorAll(".a")) el.style.display = isAnalog ? "" : "none";
+    }
+
+    function fillForm() {
+      for (const key of Object.keys(DEFAULTS)) {
+        const el = $(key);
+        if (!el) continue;
+        if (el.type === "checkbox") el.checked = !!settings[key];
+        else if (key !== "bgImage") el.value = settings[key];
+        const label = $(key + "_v");
+        if (label) label.textContent = settings[key];
+      }
+      const preview = $("bgPreview");
+      if (settings.bgImage) {
+        preview.src = settings.bgImage;
+        preview.style.display = "block";
+      } else {
+        preview.removeAttribute("src");
+        preview.style.display = "none";
+      }
+      $("bgClear").style.display = settings.bgImage ? "" : "none";
+    }
+
+    // ---- Fonts ----------------------------------------------------------------
+    const GENERIC_FONTS = ["serif", "sans-serif", "monospace", "cursive", "fantasy", "system-ui"];
+    const measureCtx = document.createElement("canvas").getContext("2d");
+
+    // A font counts as installed if swapping it in changes text width against
+    // each of three different fallback fonts.
+    function fontInstalled(name) {
+      const clean = String(name || "").replace(/["';{}\\]/g, "").trim();
+      if (!clean) return null;
+      if (GENERIC_FONTS.includes(clean.toLowerCase())) return true;
+      const sample = "mmmmmmmmmmlliWW0123456789";
+      for (const base of ["monospace", "serif", "sans-serif"]) {
+        measureCtx.font = `72px ${base}`;
+        const w0 = measureCtx.measureText(sample).width;
+        measureCtx.font = `72px "${clean}", ${base}`;
+        if (measureCtx.measureText(sample).width !== w0) return true;
+      }
+      return false;
+    }
+
+
+    function save() {
+      if (!ws || ws.readyState !== WebSocket.OPEN) return;
+      ws.send(JSON.stringify({ event: "setSettings", context: actionContext, payload: settings }));
+    }
+
+    function readField(el) {
+      if (el.type === "checkbox") return el.checked;
+      if (el.type === "range") return Number(el.value);
+      return el.value;
+    }
+
+    // Wire up every control that has a matching default (both kinds; the
+    // other kind's controls are simply hidden and ignored).
+    const ALL_KEYS = new Set([...Object.keys(DEFAULTS_DIGITAL), ...Object.keys(DEFAULTS_ANALOG)]);
+    for (const key of ALL_KEYS) {
+      const el = $(key);
+      if (!el || key === "bgImage") continue;
+      el.addEventListener("input", () => {
+        settings[key] = readField(el);
+        const label = $(key + "_v");
+        if (label) label.textContent = settings[key];
+        save();
+      });
+    }
+
+    // Background image: crop to a square, shrink to 144x144, store as a small JPEG data URL.
+    $("bgFile").addEventListener("change", (e) => {
+      const file = e.target.files && e.target.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = () => {
+        const img = new Image();
+        img.onload = () => {
+          const out = document.createElement("canvas");
+          out.width = out.height = 144;
+          const c = out.getContext("2d");
+          const scale = Math.max(144 / img.naturalWidth, 144 / img.naturalHeight);
+          const w = img.naturalWidth * scale;
+          const h = img.naturalHeight * scale;
+          c.drawImage(img, (144 - w) / 2, (144 - h) / 2, w, h);
+          settings.bgImage = out.toDataURL("image/jpeg", 0.85);
+          fillForm();
+          save();
+        };
+        img.src = reader.result;
+      };
+      reader.readAsDataURL(file);
+      e.target.value = ""; // allow picking the same file again later
+    });
+
+    $("bgClear").addEventListener("click", () => {
+      settings.bgImage = "";
+      fillForm();
+      save();
+    });
+
+    $("reset").addEventListener("click", () => {
+      settings = { ...DEFAULTS };
+      fillForm();
+      save();
+    });
+
+    // ---- Installed-fonts-only suggestion list ---------------------------------
+    // Uses the browser's font-listing API when the webview offers it (exact,
+    // complete list). Otherwise probes a large list of well-known font names
+    // and keeps only the ones that resolve on this system. Re-runs whenever a
+    // font box is focused, so newly installed fonts show up without a restart.
+    let scanning = false;
+    let lastScan = 0;
+
+    async function refreshFontList(force) {
+      if (scanning || (!force && Date.now() - lastScan < 2000)) return;
+      scanning = true;
+      try {
+        let families = null;
+        if (typeof window.queryLocalFonts === "function") {
+          try {
+            const fonts = await window.queryLocalFonts();
+            families = [...new Set(fonts.map((f) => f.family))];
+          } catch (e) { /* not allowed here: fall back to probing */ }
+        }
+        if (!families) families = [...new Set(window.KNOWN_FONTS || [])].filter(fontInstalled);
+        families.sort((a, b) => a.localeCompare(b));
+
+        const list = $("fontList");
+        list.innerHTML = "";
+        for (const name of [...GENERIC_FONTS, ...families]) {
+          const opt = document.createElement("option");
+          opt.value = name;
+          list.appendChild(opt);
+        }
+      } finally {
+        scanning = false;
+        lastScan = Date.now();
+      }
+    }
+
+    // While a font box is focused, show its current value as a placeholder and
+    // clear the text so the dropdown lists every font instead of filtering by it.
+    for (const key of ["timeFont", "numberFont", "dateFont"]) {
+      const el = $(key);
+      const basePlaceholder = el.placeholder;
+      el.addEventListener("focus", () => {
+        refreshFontList();
+        el.dataset.prev = el.value;
+        el.placeholder = el.value || basePlaceholder;
+        el.value = "";
+      });
+      el.addEventListener("blur", () => {
+        if (el.value === "" && el.dataset.prev !== undefined) el.value = el.dataset.prev;
+        el.placeholder = basePlaceholder;
+      });
+    }
+
+    refreshFontList(true);
+
+    // ---- Date format labels ---------------------------------------------------
+    // The examples in the format list always show today's date. They are rebuilt
+    // when the panel opens, when it gets focus, when the list is opened, and
+    // every 30 s, so they can't go stale.
+    const SAMPLE_DAYS = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+    const SAMPLE_MONTHS = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+
+    function sampleDate(fmt, now) {
+      const d = now.getDate();
+      const m = now.getMonth();
+      const y = now.getFullYear();
+      const p2 = (n) => String(n).padStart(2, "0");
+      switch (fmt) {
+        case "dM": return `${d} ${SAMPLE_MONTHS[m]}`;
+        case "wdDMY": return `${SAMPLE_DAYS[now.getDay()]} ${d} ${SAMPLE_MONTHS[m]} ${y}`;
+        case "dm": return `${p2(d)}/${p2(m + 1)}`;
+        case "dmy": return `${p2(d)}/${p2(m + 1)}/${y}`;
+        case "iso": return `${y}-${p2(m + 1)}-${p2(d)}`;
+        default: return `${SAMPLE_DAYS[now.getDay()]} ${d} ${SAMPLE_MONTHS[m]}`;
+      }
+    }
+
+    // The list is built here (not in the HTML) so every entry is an example
+    // generated from today's date.
+    const DATE_FORMATS = ["wdDM", "dM", "wdDMY", "dm", "dmy", "iso"];
+    const dateSelect = $("dateFormat");
+    for (const fmt of DATE_FORMATS) {
+      const opt = document.createElement("option");
+      opt.value = fmt;
+      dateSelect.appendChild(opt);
+    }
+
+    function refreshDateLabels() {
+      const now = new Date();
+      for (const opt of dateSelect.options) opt.textContent = sampleDate(opt.value, now);
+    }
+
+    refreshDateLabels();
+    for (const evt of ["mousedown", "focus"]) dateSelect.addEventListener(evt, refreshDateLabels);
+    window.addEventListener("focus", refreshDateLabels);
+    document.addEventListener("visibilitychange", refreshDateLabels);
+    setInterval(refreshDateLabels, 30000);
+
+    // Entry point called by the OpenDeck / Stream Deck host.
+    function connectElgatoStreamDeckSocket(port, inUUID, registerEvent, inInfo, inActionInfo) {
+      actionContext = inUUID;
+      refreshDateLabels(); // the panel was (re)opened
+      let stored = {};
+      let isAnalog = false;
+      try {
+        const actionInfo = JSON.parse(inActionInfo);
+        isAnalog = actionInfo.action === ACTION_ANALOG;
+        stored = (actionInfo.payload && actionInfo.payload.settings) || {};
+      } catch (e) { /* use defaults */ }
+
+      applyKind(isAnalog);
+      settings = { ...DEFAULTS, ...stored };
+      fillForm();
+
+      ws = new WebSocket("ws://127.0.0.1:" + port);
+      ws.onopen = () => ws.send(JSON.stringify({ event: registerEvent, uuid: inUUID }));
+      ws.onmessage = (evt) => {
+        const msg = JSON.parse(evt.data);
+        if (msg.event === "didReceiveSettings") {
+          settings = { ...DEFAULTS, ...((msg.payload && msg.payload.settings) || {}) };
+          fillForm();
+        }
+      };
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,48 @@
+{
+  "SDKVersion": 2,
+  "Name": "Clocks",
+  "Version": "0.9.5",
+  "Author": "MrRedstonia",
+  "Description": "Customizable digital and analog clocks showing local time and date on a key.",
+  "Icon": "assets/icon",
+  "Category": "Clocks",
+  "URL": "https://mrredstonia.com",
+  "CategoryIcon": "assets/category_icon",
+  "CodePath": "index.html",
+  "OS": [
+    { "Platform": "linux" },
+    { "Platform": "windows", "MinimumVersion": "10" },
+    { "Platform": "mac", "MinimumVersion": "10.15" }
+  ],
+  "Software": { "MinimumVersion": "6.4" },
+  "Actions": [
+    {
+      "Name": "Digital Clock",
+      "UUID": "com.mrredstonia.clocks.digital",
+      "Icon": "assets/icon_digital",
+      "Tooltip": "Digital clock with optional seconds and date.",
+      "Controllers": ["Keypad"],
+      "PropertyInspectorPath": "pi.html",
+      "States": [
+        {
+          "Image": "assets/icon_digital",
+          "ShowTitle": false
+        }
+      ]
+    },
+    {
+      "Name": "Analog Clock",
+      "UUID": "com.mrredstonia.clocks.analog",
+      "Icon": "assets/icon",
+      "Tooltip": "Analog clock with customizable face, hands and date.",
+      "Controllers": ["Keypad"],
+      "PropertyInspectorPath": "pi.html",
+      "States": [
+        {
+          "Image": "assets/icon",
+          "ShowTitle": false
+        }
+      ]
+    }
+  ]
+}
